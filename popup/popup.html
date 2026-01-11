@@ -2,78 +2,60 @@
 <html>
 
 <head>
-  <style>
-    body {
-      width: 320px;
-      font-family: sans-serif;
-      padding: 10px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 80px;
-      margin-bottom: 10px;
-    }
-
-    input {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 8px;
-      background-color: #1da1f2;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #1991db;
-    }
-
-    .status {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #666;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
 </head>
 
 <body>
-  <h3>Grok Imagine Loop</h3>
+  <h3>
+    <img src="../icons/icon48.png" style="width: 24px; height: 24px;">
+    Grok Loop
+  </h3>
 
-  <label for="initialImage">Initial Image (Optional)</label>
-  <input type="file" id="initialImage" accept="image/*">
+  <div class="input-group">
+    <label for="initialImage">Initial Image (Optional)</label>
+    <!-- Standard input for maximum compatibility with logic, styled simply -->
+    <input type="file" id="initialImage" accept="image/*">
+  </div>
 
-  <label for="prompt">Prompt Sequence (one per line)</label>
-  <textarea id="prompt" placeholder="Prompt for segment 1&#10;Prompt for segment 2&#10;..."></textarea>
+  <div class="input-group">
+    <label for="prompt">Prompts (One per line)</label>
+    <textarea id="prompt" placeholder="Enter your video prompts here...
+Example:
+A futuristic city...
+The city lights up at night..."></textarea>
+  </div>
 
-  <label for="loops">Number of Loops</label>
-  <input type="number" id="loops" value="3" min="1">
+  <div class="row">
+    <div class="col input-group">
+      <label for="loops">Loops</label>
+      <input type="number" id="loops" value="3" min="1">
+    </div>
+    <div class="col input-group">
+      <label for="timeout">Timeout (s)</label>
+      <input type="number" id="timeout" value="120" min="5">
+    </div>
+  </div>
 
-  <label for="timeout">Timeout (seconds)</label>
-  <input type="number" id="timeout" value="120" min="5">
-
-  <button id="resumeBtn" style="display: none; background-color: #28a745; margin-bottom: 10px;">Resume Previous
-    Session</button>
+  <button id="resumeBtn" style="display: none;">Resume Previous Session</button>
   <button id="startBtn">Start Generation</button>
 
   <div id="status" class="status">Ready</div>
 
-  <hr style="margin-top: 20px; border: 0; border-top: 1px solid #eee;">
+  <hr>
 
-  <div style="font-size: 11px; color: #555;">
-    <h4 style="margin: 10px 0 5px;">About</h4>
-    <p style="margin: 0 0 5px;">Automate Grok Imagine to create seamless video loops.</p>
-    <ul style="padding-left: 20px; margin: 0 0 10px;">
-      <li>Auto-generation loops</li>
-      <li>Smart frame extraction</li>
-      <li>Pause, Resume & Persist</li>
+  <div class="about-section">
+    <h4>About</h4>
+    <p style="margin: 0 0 8px;">Automate Grok Imagine looped videos.</p>
+    <ul style="margin-bottom: 12px;">
+      <li>Auto-Looping & Frame Extraction</li>
+      <li>Pause/Resume Support</li>
+      <li>Anti-Bot Protection</li>
     </ul>
-
-    <button id="kofiBtn" style="background-color: #FF5E5B; margin-top: 5px;">☕ Buy me a coffee</button>
+    <div style="display: flex; gap: 8px; margin-top: 5px;">
+      <button id="githubBtn">GitHub</button>
+      <button id="kofiBtn">Buy ☕</button>
+    </div>
   </div>
 
   <script src="popup.js"></script>

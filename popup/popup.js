@@ -153,4 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('kofiBtn').addEventListener('click', () => {
         chrome.tabs.create({ url: 'https://ko-fi.com/mrdom78' });
     });
+
+    document.getElementById('githubBtn').addEventListener('click', () => {
+        chrome.tabs.create({ url: 'https://github.com/allophylus/grok-imagine-loop' });
+    });
 });
