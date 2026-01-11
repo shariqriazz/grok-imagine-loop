@@ -6,12 +6,19 @@ This tool allows you to create seamless video sequences by automatically using t
 
 ## Features
 
-- **🔄 Auto-Looping:** Automatically chains video generations.
-- **🖼️ Smart Frame Extraction:** Extracts the last frame of a video to use as the start of the next one.
-- **⏸️ Pause & Resume:** Pause your generation to check progress, and resume later.
-- **💾 State Persistence:** Safely reload your browser; your progress is saved.
-- **⏱️ Human-Like Delays:** Randomized delays between actions to avoid rate limits.
-- **🛠️ Smart Recovery:** Options to regenerate single segments or cascade changes to all future segments.
+*   **🔄 Auto-Looping (Scenes):** Automatically chains video generations. Define how many "Scenes" you want for your story.
+*   **🖼️ Smart Frame Extraction:** Extracts the last frame of a video to use as the start of the next one.
+*   **⚡ Upscale Support:** Check "Upscale Result" to automatically request the High Quality version of each video.
+*   **📥 Auto-Download:** Automatically saves each generated segment to your Downloads folder.
+*   **💾 State Persistence:**
+    *   **Input Saving:** Your Prompts, Scene counts, and settings are saved automatically.
+    *   **Image Resume:** If you close the popup, your uploaded initial image is restored (`✓ my-image.jpg`).
+    *   **Crash Recovery:** Safely reload your browser; your progress is saved and can be resumed.
+*   **⇱ Power User UI:**
+    *   **Pop Out Mode:** Detach the controller into a separate window to keep it visible while you work.
+    *   **Modern Dark Mode:** Sleek interface that matches the Grok aesthetic.
+*   **🛡️ Anti-Bot Protection:** Human-like typing, clicking, and randomized delays to avoid detection.
+*   **🛠️ Smart Recovery:** Options to regenerate single segments or cascade changes to all future segments.
 
 ## Installation (Google Chrome)
 
@@ -33,22 +40,23 @@ This tool allows you to create seamless video sequences by automatically using t
 
 1.  **Open Grok:**
     *   Go to [Grok.com](https://grok.com) or the Grok tab on X.com.
-    *   *Note: Ensure you are logged in.*
 2.  **Launch the Extension:**
     *   Click the extension icon in your toolbar.
-    *   A popup will appear.
+    *   *Optional:* Click the `⇱` button to pop the controller out into its own window.
 3.  **Configure Your Loop:**
-    *   **Initial Image (Optional):** Upload a starting image if you want to animate a specific picture.
+    *   **Initial Image (Optional):** Upload a starting image to begin your story on a specific frame.
     *   **Prompts:** Enter your video prompts, one per line.
-    *   **Loops:** How many times to cycle through the prompts.
+    *   **Scenes:** How many times to cycle through the prompts.
     *   **Timeout:** Max time to wait for generation (default 120s).
+    *   **Upscale Result:** Enable to wait for and capture the High Quality version.
+    *   **Auto-Download:** Enable to save every video segment automatically.
 4.  **Start:**
     *   Click **Start Generation**.
     *   The "Grok Loop" dashboard will appear on the page.
 
 **Tips:**
 *   Use the **Pause** button on the dashboard if you need to inspect a video.
-*   The extension automatically handles the "Upload" process for you. **Do not** close the tab while it's running.
+*   Use **Reset Inputs** at the bottom of the popup to clear all saved settings and images.
 
 ## Support
 
