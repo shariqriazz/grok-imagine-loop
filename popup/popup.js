@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeoutInput = document.getElementById('timeout');
     const fileInput = document.getElementById('initialImage');
     const restoredImageIndicator = document.getElementById('restoredImageIndicator');
+    const restoredImageText = document.getElementById('restoredImageText');
+    const restoredImagePreview = document.getElementById('restoredImagePreview');
     const clearImageBtn = document.getElementById('clearImageBtn');
     const statusDiv = document.getElementById('status');
     let storedImageData = null;
@@ -27,7 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (saved.autoDownload !== undefined) autoDownloadInput.checked = saved.autoDownload;
         }
         if (result.grokLoopImage) {
-            storedImageData = result.grokLoopImage;
+            // Handle new object format vs old string format
+            if (typeof result.grokLoopImage === 'string') {
+                // Backward compat
+                storedImageData = result.grokLoopImage;
+                restoredImageText.textContent = '✓ Image Restored';
+                restoredImagePreview.src = storedImageData;
+            } else {
+                storedImageData = result.grokLoopImage.dataUrl;
+                restoredImageText.textContent = `✓ ${result.grokLoopImage.fileName}`;
+                restoredImagePreview.src = storedImageData;
+            }
             restoredImageIndicator.style.display = 'flex';
         }
     });
@@ -35,9 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Image Input Handler
     fileInput.addEventListener('change', async () => {
         if (fileInput.files.length > 0) {
-            const dataUrl = await readFileAsDataURL(fileInput.files[0]);
+            const file = fileInput.files[0];
+            const dataUrl = await readFileAsDataURL(file);
             storedImageData = dataUrl;
-            chrome.storage.local.set({ 'grokLoopImage': dataUrl });
+
+            // Save object with filename
+            chrome.storage.local.set({
+                'grokLoopImage': {
+                    dataUrl: dataUrl,
+                    fileName: file.name
+                }
+            });
+
+            restoredImageText.textContent = `✓ ${file.name}`;
+            restoredImagePreview.src = dataUrl;
             restoredImageIndicator.style.display = 'flex';
         }
     });
@@ -46,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearImageBtn.addEventListener('click', () => {
         storedImageData = null;
         fileInput.value = ''; // Reset file input
+        restoredImagePreview.src = '';
         chrome.storage.local.remove('grokLoopImage');
         restoredImageIndicator.style.display = 'none';
     });

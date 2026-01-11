@@ -23,10 +23,14 @@
     <!-- Standard input for maximum compatibility with logic, styled simply -->
     <input type="file" id="initialImage" accept="image/*">
     <div id="restoredImageIndicator"
-      style="display: none; margin-top: 5px; font-size: 11px; color: var(--success); align-items: center; gap: 5px;">
-      <span>✓ Image Restored</span>
-      <button id="clearImageBtn"
-        style="background: none; border: none; color: var(--danger); cursor: pointer; padding: 0; text-decoration: underline; font-size: 11px;">Clear</button>
+      style="display: none; flex-direction: column; margin-top: 8px; font-size: 11px; color: var(--success); gap: 5px;">
+      <img id="restoredImagePreview"
+        style="max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 4px; border: 1px solid #333; background: #000;">
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <span id="restoredImageText"></span>
+        <button id="clearImageBtn"
+          style="background: none; border: none; color: var(--danger); cursor: pointer; padding: 0; text-decoration: underline; font-size: 11px;">Clear</button>
+      </div>
     </div>
   </div>
 
@@ -40,7 +44,7 @@ The city lights up at night..."></textarea>
 
   <div class="row">
     <div class="col input-group">
-      <label for="loops">Loops</label>
+      <label for="loops">Scenes</label>
       <input type="number" id="loops" value="3" min="1">
     </div>
     <div class="col input-group">
@@ -60,14 +64,14 @@ The city lights up at night..."></textarea>
     </div>
   </div>
 
-  <div style="text-align: right; margin-bottom: 10px;">
+  <button id="resumeBtn" style="display: none;">Resume Previous Session</button>
+  <button id="startBtn">Start Generation</button>
+
+  <div style="text-align: center; margin-top: 15px; margin-bottom: 5px;">
     <button id="resetInputsBtn"
       style="background: none; border: none; color: var(--text-dim); font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline;">Reset
       Inputs</button>
   </div>
-
-  <button id="resumeBtn" style="display: none;">Resume Previous Session</button>
-  <button id="startBtn">Start Generation</button>
 
   <div id="status" class="status">Ready</div>
 
