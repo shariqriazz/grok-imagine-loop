@@ -157,17 +157,8 @@ button {
 }
 
 #startBtn {
-    width: 100%;
-    padding: 12px;
-    background: var(--text-main);
-    color: var(--bg);
-    border: none;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    margin-top: 10px;
+    /* Styles moved to .sticky-footer section */
+    /* width: 100%; */
 }
 
 #startBtn:hover {
@@ -270,13 +261,39 @@ input[type="checkbox"] {
     background: var(--bg-hover);
 }
 
-/* Sticky Footer (if needed) */
+/* Sticky Footer */
 .sticky-footer {
     position: sticky;
     bottom: 0;
+    left: 0;
+    right: 0;
     background: var(--bg);
     padding: 10px;
     border-top: 1px solid var(--border);
+    margin: 0 -15px -15px -15px;
+    /* Counteract tab padding */
+    padding-left: 15px;
+    padding-right: 15px;
+    z-index: 50;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Reduced Button Size */
+#startBtn {
+    width: 100%;
+    padding: 8px;
+    /* Reduced from 12px */
+    background: var(--text-main);
+    color: var(--bg);
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 13px;
+    /* Reduced from 14px */
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 0;
+    /* Handled by container padding */
 }
 
 /* Custom Tooltip */
