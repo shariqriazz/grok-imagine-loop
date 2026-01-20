@@ -517,32 +517,41 @@ if (window.GrokLoopInjected) {
     async function upscaleVideo() {
         await new Promise(r => setTimeout(r, 2000)); // Wait for UI to settle
 
-        // Helper to find button/menuitem by text
-        const findBtn = (text) => {
-            const elements = Array.from(document.querySelectorAll('button, div[role="button"], div[role="menuitem"]'));
+        // 1. Scope Search to Main Content Area (to avoid Sidebar)
+        const mainContent = document.querySelector('main') || document.body;
+
+        // Helper to find button/menuitem by text (Scoped optional)
+        const findBtn = (text, scope = document) => {
+            const elements = Array.from(scope.querySelectorAll('button, div[role="button"], div[role="menuitem"]'));
             return elements.find(el => {
                 const content = (el.innerText || el.ariaLabel || el.textContent || '').toLowerCase();
                 return content.includes(text.toLowerCase()) && !el.disabled;
             });
         };
 
-        // 1. Try finding 'Upscale' directly
-        let upscaleBtn = findBtn('Upscale');
+        // 1. Try finding 'Upscale' directly (Search global or main? Main is safer for buttons, Global for menus)
+        // Let's try Main first, then Global if needed?
+        // Actually, direct buttons are usually in Main.
+        let upscaleBtn = findBtn('Upscale', mainContent);
 
         if (!upscaleBtn) {
             console.log('Upscale button not found directly. Checking "More" menu...');
 
-            // 2. Find "More" button (...)
+            // 2. Find "More" button (...) - Scoped to Main
             // Strategy A: Aria Label (More, Options, etc.)
-            let moreBtn = Array.from(document.querySelectorAll('button')).find(b => {
+            let moreBtn = Array.from(mainContent.querySelectorAll('button')).find(b => {
                 const label = (b.ariaLabel || b.title || '').toLowerCase();
+                // Ensure it's NOT in a navigation sidebar
+                if (b.closest('nav') || b.closest('[role="navigation"]')) return false;
+
                 return (label.includes('more') || label.includes('option')) && !b.disabled;
             });
 
             // Strategy C: Inner Text "..." (Loosened)
             if (!moreBtn) {
                 console.log('Strategy A failed. Trying Strategy C (Inner Text "...")...');
-                moreBtn = Array.from(document.querySelectorAll('button')).find(b => {
+                moreBtn = Array.from(mainContent.querySelectorAll('button')).find(b => {
+                    if (b.closest('nav') || b.closest('[role="navigation"]')) return false;
                     const text = (b.innerText || '').trim();
                     return text.includes('...') || text.includes('…');
                 });
@@ -551,7 +560,7 @@ if (window.GrokLoopInjected) {
             // Strategy B: Proximity to "Edit" (Refined)
             if (!moreBtn) {
                 console.log('Strategy A/C failed. Trying Strategy B (Proximity)...');
-                const editBtn = Array.from(document.querySelectorAll('button')).find(b =>
+                const editBtn = Array.from(mainContent.querySelectorAll('button')).find(b =>
                     (b.innerText || '').toLowerCase().includes('edit') // broader match
                 );
 
@@ -572,7 +581,7 @@ if (window.GrokLoopInjected) {
             // Strategy D: Proximity to "Redo" or "Retry" (if Edit not found)
             if (!moreBtn) {
                 console.log('Strategy A/B/C failed. Trying Strategy D (Redo/Retry Proximity)...');
-                const actionBtn = Array.from(document.querySelectorAll('button')).find(b => {
+                const actionBtn = Array.from(mainContent.querySelectorAll('button')).find(b => {
                     const text = (b.innerText || '').toLowerCase();
                     return text.includes('redo') || text.includes('retry') || text.includes('vary');
                 });
@@ -612,8 +621,8 @@ if (window.GrokLoopInjected) {
 
                 await new Promise(r => setTimeout(r, 1000)); // Extra settle time
 
-                // 3. Search for Upscale again inside the new menu
-                upscaleBtn = findBtn('Upscale'); // This will use the "Upscale" or "Upscale video" logic we have
+                // 3. Search for Upscale again inside the new menu (Global Scope for Portals)
+                upscaleBtn = findBtn('Upscale', document); // This will use the "Upscale" or "Upscale video" logic we have
             } else {
                 console.warn('Could not find "More" button via any strategy.');
 
