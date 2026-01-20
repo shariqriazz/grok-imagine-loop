@@ -1,5 +1,8 @@
 # Release Notes - Grok Imagine Loop
 
+## v1.6.0.6 (Beta 6)
+- **Fix:** Enhanced "Scene 1 Regeneration" fix with aggressive input cleanup. The extension now actively removes any residual image attachments in Grok's input box before starting a new generation, ensuring a completely clean state.
+
 ## v1.6.0.5 (Beta 5)
 - **Fix:** Improved "Make Video" button detection to find floating footers while strictly ignoring sidebar navigation (Final fix for "Sidebar Misclick" vs "Button Not Found").
 - **Fix:** Clicking "Regenerate" next to a scene now correctly uses the *edited* prompt from the text box, instead of the original prompt.
