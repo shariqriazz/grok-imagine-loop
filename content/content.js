@@ -1148,7 +1148,14 @@ if (window.GrokLoopInjected) {
                             // Careful: if inputImage is null/undefined in payload, it might wipe existing extraction.
                             // But popup sends what it has.
                             if (updatedScene.inputImage !== undefined) {
-                                state.segments[i].inputImage = updatedScene.inputImage; // DataURL or null
+                                // Updated image from Resume Payload is likely a base64 DataURL string.
+                                // We must convert it to a Blob, because processSegment expects a Blob.
+                                if (typeof updatedScene.inputImage === 'string' && updatedScene.inputImage.startsWith('data:')) {
+                                    console.log('Converting updated scene image from DataURL to Blob...');
+                                    state.segments[i].inputImage = dataURItoBlob(updatedScene.inputImage);
+                                } else {
+                                    state.segments[i].inputImage = updatedScene.inputImage;
+                                }
                             }
                         }
                     });
