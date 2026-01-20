@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const globalPromptInput = document.getElementById('globalPrompt');
     const continueOnFailureInput = document.getElementById('continueOnFailure');
     const pauseOnModerationInput = document.getElementById('pauseOnModeration');
+    const pauseAfterSceneInput = document.getElementById('pauseAfterScene');
     const upscaleInput = document.getElementById('upscale');
     const resetInputsBtn = document.getElementById('resetInputsBtn');
     const statusDiv = document.getElementById('status');
@@ -205,6 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     reuseInitialImage: reuseInitialImageInput.checked,
                     continueOnFailure: continueOnFailureInput.checked,
                     pauseOnModeration: pauseOnModerationInput.checked,
+                    pauseAfterScene: pauseAfterSceneInput.checked,
                     birthYear: birthYearInput.value,
                     globalPrompt: globalPromptInput.value
                 },
@@ -250,10 +252,11 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         let displayVer = `v${manifestVersion}`;
         if (manifestVersion === '1.6.0.1') displayVer = 'v1.6 Beta 1';
+        if (manifestVersion === '1.6.0.2') displayVer = 'v1.6 Beta 2';
 
         if (versionSpan) versionSpan.innerText = displayVer;
         const aboutVer = document.getElementById('aboutVersion');
-        if (aboutVer) aboutVer.innerText = `Version ${manifestVersion} (Beta 1)`;
+        if (aboutVer) aboutVer.innerText = `Version ${manifestVersion} (Beta 2)`;
     } catch (e) { console.error(e); }
 
     const bulkPromptsInput = document.getElementById('bulkPrompts');
@@ -593,6 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reuseInitialImageInput.checked = !!data.settings.reuseInitialImage;
                 continueOnFailureInput.checked = !!data.settings.continueOnFailure;
                 pauseOnModerationInput.checked = !!data.settings.pauseOnModeration;
+                if (data.settings.pauseAfterScene !== undefined) pauseAfterSceneInput.checked = data.settings.pauseAfterScene;
                 if (data.settings.showDashboard !== undefined) {
                     showDashboardInput.checked = data.settings.showDashboard;
                     // Trigger immediate update if tab is active
@@ -647,6 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reuseInitialImage: reuseInitialImageInput.checked,
             continueOnFailure: continueOnFailureInput.checked,
             pauseOnModeration: pauseOnModerationInput.checked,
+            pauseAfterScene: pauseAfterSceneInput.checked,
             showDashboard: showDashboardInput.checked,
             pauseOnModeration: pauseOnModerationInput.checked,
             showDashboard: showDashboardInput.checked,
@@ -687,7 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Attach Config Listeners
-    [timeoutInput, maxDelayInput, retryLimitInput, moderationRetryLimitInput, upscaleInput, autoDownloadInput, autoSkipInput, birthYearInput, globalPromptInput, continueOnFailureInput, pauseOnModerationInput, reuseInitialImageInput, showDashboardInput, showDebugLogsInput].forEach(el => {
+    [timeoutInput, maxDelayInput, retryLimitInput, moderationRetryLimitInput, upscaleInput, autoDownloadInput, autoSkipInput, birthYearInput, globalPromptInput, continueOnFailureInput, pauseOnModerationInput, pauseAfterSceneInput, reuseInitialImageInput, showDashboardInput, showDebugLogsInput].forEach(el => {
         if (el) {
             el.addEventListener('input', saveConfigs);
             el.addEventListener('change', saveConfigs);
@@ -733,6 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (c.reuseInitialImage !== undefined) reuseInitialImageInput.checked = c.reuseInitialImage;
             if (c.continueOnFailure !== undefined) continueOnFailureInput.checked = c.continueOnFailure;
             if (c.pauseOnModeration !== undefined) pauseOnModerationInput.checked = c.pauseOnModeration;
+            if (c.pauseAfterScene !== undefined) pauseAfterSceneInput.checked = c.pauseAfterScene;
             if (c.showDashboard !== undefined) showDashboardInput.checked = c.showDashboard;
             if (c.showDebugLogs !== undefined) showDebugLogsInput.checked = c.showDebugLogs;
             if (c.birthYear) birthYearInput.value = c.birthYear;
@@ -1001,6 +1007,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reuseInitialImage: reuseInitialImageInput.checked,
                 continueOnFailure: continueOnFailureInput.checked,
                 pauseOnModeration: pauseOnModerationInput.checked,
+                pauseAfterScene: pauseAfterSceneInput.checked,
                 showDashboard: showDashboardInput.checked,
                 showDebugLogs: showDebugLogsInput.checked,
                 birthYear: birthYearInput.value || '2000',

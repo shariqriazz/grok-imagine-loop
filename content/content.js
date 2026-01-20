@@ -1234,6 +1234,14 @@ if (window.GrokLoopInjected) {
                 }
 
                 await this.processSegment(i);
+
+                // Pause After Scene (Step Mode)
+                if (state.config.pauseAfterScene && state.isRunning) {
+                    console.log('Pause After Scene active. Pausing loop...');
+                    state.isRunning = false;
+                    // Dashboard update handled below by logic or next update
+                }
+
                 this.saveState();
 
                 if (!state.isRunning) break;
