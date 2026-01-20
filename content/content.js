@@ -1327,7 +1327,9 @@ if (window.GrokLoopInjected) {
                             console.log('Using global initial image (First Segment)...');
                         } else {
                             // Loop Mode fallback (if extraction failed or wasn't set)
-                            if (state.lastGeneratedImage) {
+                            // FIX: Only use fallback for subsequent scenes (index > 0). 
+                            // Scene 1 should NOT inherit a stale lastGeneratedImage unless explicitly configured (reuseInitialImage handled above).
+                            if (index > 0 && state.lastGeneratedImage) {
                                 console.log('Using last generated frame (Fallback)...');
                                 imageToUpload = state.lastGeneratedImage;
                             }
