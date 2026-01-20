@@ -1239,7 +1239,7 @@ if (window.GrokLoopInjected) {
                 if (state.config.pauseAfterScene && state.isRunning) {
                     console.log('Pause After Scene active. Pausing loop...');
                     state.isRunning = false;
-                    // Dashboard update handled below by logic or next update
+                    this.dashboard.update(); // Broadcast "Paused" state
                 }
 
                 this.saveState();
