@@ -1687,6 +1687,7 @@ if (window.GrokLoopInjected) {
                     if (newConfig.pauseOnModeration !== undefined) state.config.pauseOnModeration = newConfig.pauseOnModeration;
                     if (newConfig.showDebugLogs !== undefined) state.config.showDebugLogs = newConfig.showDebugLogs;
                     if (newConfig.moderationRetryLimit !== undefined) state.config.moderationRetryLimit = newConfig.moderationRetryLimit;
+                    if (newConfig.pauseAfterScene !== undefined) state.config.pauseAfterScene = newConfig.pauseAfterScene;
                     // Other runtime configs can be synced here if needed
                 }
             }

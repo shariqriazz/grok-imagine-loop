@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         if (versionNumber) { // Check existence (new ID)
-            versionNumber.textContent = "v1.6 Beta 7"; // Manual Override for Beta
+            versionNumber.textContent = "v1.6 Beta 8"; // Manual Override for Beta
         }
 
         let displayVer = `v${manifestVersion}`;

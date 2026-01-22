@@ -1,5 +1,9 @@
 # Release Notes - Grok Imagine Loop
 
+## v1.6.0.8 (Beta 8)
+- **Fix:** "Pause After Scene" setting now updates instantly while the loop is running. Previously, you had to restart the loop for this change to take effect.
+- **Refactor:** Removed legacy code.
+
 ## v1.6.0.7 (Beta 7)
 - **Fix:** Fixed an issue where adding new scenes to a finished loop and clicking "Resume" would incorrectly restart the loop from the beginning. It now correctly resumes processing the new scenes.
 
