@@ -6,12 +6,23 @@ if (window.GrokLoopInjected) {
     console.log('Grok Imagine Loop content script (V2) Initializing...');
 
     // --- Selectors ---
+    // --- Multi-Language Support ---
+    const TRANSLATIONS = {
+        send: ['send', 'post', 'submit', 'enviar', 'publicar', 'envoyer', 'publier', 'absenden', 'senden', 'veröffentlichen', '发送', '发布', '送信', '投稿', 'отправить', 'enviar'],
+        makeVideo: ['make video', 'generate', 'create video', 'crear video', 'generar', 'créer une vidéo', 'générer', 'video erstellen', 'generieren', '生成视频', '制作视频', '動画を作成', 'создать видео', 'criar vídeo'],
+        upload: ['add photos', 'add image', 'upload', 'añadir', 'subir', 'ajouter', 'importer', 'hochladen', 'hinzufügen', '添加', '上传', '追加', 'загрузить', 'adicionar'],
+        regenerate: ['redo', 'regenerate', 'try again', 'retry', 'regenerar', 'intentar de nuevo', 'régénérer', 'réessayer', 'neu erzeugen', 'erneut versuchen', '重新生成', '再試行', 'регенерировать', 'regenerar'],
+        remove: ['remove', 'delete', 'close', 'eliminar', 'quitar', 'cerrar', 'supprimer', 'fermer', 'entfernen', 'schließen', '删除', '关闭', '削除', '閉じる', 'удалить', 'remover', 'fechar'],
+        moderation: ['content moderated', 'try a different idea', 'contenido moderado', 'contenu modéré', 'moderiert', '内容已过滤', '內容已過濾', '不適切なコンテンツ', 'контент модерируется', 'conteúdo moderado']
+    };
+
+    // --- Selectors ---
     const SELECTORS = {
         textArea: 'textarea, div[contenteditable="true"], div[role="textbox"]',
-        uploadButton: 'button[aria-label="Add photos or video"], button[title="Add image"], button svg rect',
-        sendButton: 'button[aria-label="Send"], button[aria-label="Post"], button[type="submit"]',
-        // Common grok.com specific
-        grokUpload: 'button[aria-label="Upload file"]'
+        // Note: Specific button selectors now handled dynamically via TRANSLATIONS
+        uploadButton: 'button[aria-label], button[title], button svg rect',
+        sendButton: 'button[type="submit"], button[aria-label]',
+        grokUpload: 'button[aria-label]'
     };
 
     // --- State ---
@@ -426,7 +437,12 @@ if (window.GrokLoopInjected) {
                 if (b.closest('nav') || b.closest('aside') || b.closest('[role="navigation"]')) return false;
 
                 const label = (b.textContent || b.ariaLabel || b.title || '').trim().toLowerCase();
-                return label === 'make video' || label === 'send' || label === 'generate';
+
+                // Multi-Language Match
+                const isSend = TRANSLATIONS.send.some(k => label === k || label.includes(k));
+                const isMakeVideo = TRANSLATIONS.makeVideo.some(k => label === k || label.includes(k));
+
+                return isSend || isMakeVideo;
             });
 
             if (sendBtn) {
@@ -446,9 +462,14 @@ if (window.GrokLoopInjected) {
     async function clearInputAttachments() {
         // Look for "Remove" buttons (X) on thumbnails in the input area
         // Strategy 1: Aria Label / Title
-        const labels = ['Remove', 'Remove attachment', 'Close', 'Delete'];
+        // Strategy 1: Aria Label / Title (Multi-Language)
+        const labels = TRANSLATIONS.remove;
         let removeBtns = Array.from(document.querySelectorAll('button')).filter(b =>
-            labels.some(l => (b.ariaLabel === l || b.title === l))
+            labels.some(l => {
+                const aria = (b.ariaLabel || '').toLowerCase();
+                const title = (b.title || '').toLowerCase();
+                return aria === l || title === l || aria.includes(l) || title.includes(l);
+            })
         );
 
         // Strategy 2: SVG Path (X icon common path)
@@ -533,7 +554,8 @@ if (window.GrokLoopInjected) {
                     return;
                 }
 
-                if (bodyText.includes('Content Moderated') || bodyText.includes('Try a different idea')) {
+                // Multi-Language Moderation Check
+                if (TRANSLATIONS.moderation.some(k => bodyText.toLowerCase().includes(k))) {
                     // Verify it's not just in the prompt textarea
                     // Find the element containing this text to be sure it's an alert/toast
                     const hints = Array.from(document.querySelectorAll('div, span, p')).filter(el =>
@@ -681,11 +703,17 @@ if (window.GrokLoopInjected) {
                     console.log('Sample Toolbar HTML:', likelyToolbar.innerHTML);
                 }
                 const allButtons = Array.from(document.querySelectorAll('button'));
-                console.log('All Buttons:', allButtons.map(b => ({
-                    text: b.innerText,
-                    aria: b.ariaLabel,
-                    svg: b.querySelector('svg') ? 'Has SVG' : 'No SVG'
-                })));
+                console.log('All Buttons:', allButtons.map(b => {
+                    const label = (b.ariaLabel || b.title || b.innerText || '').toLowerCase();
+                    const isUpload = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS.upload && TRANSLATIONS.upload.some(k => label.includes(k));
+
+                    return {
+                        text: b.innerText,
+                        aria: b.ariaLabel,
+                        svg: b.querySelector('svg') ? 'Has SVG' : 'No SVG',
+                        isUpload: isUpload
+                    };
+                }));
             }
         }
 
@@ -1485,6 +1513,10 @@ if (window.GrokLoopInjected) {
                                         await new Promise(r => setTimeout(r, 3000));
                                     } else {
                                         console.error('Proactive extraction failed after all retries.');
+                                        // Respect "Pause on Error" setting
+                                        if (!state.config.continueOnFailure) {
+                                            throw new Error("Proactive Frame Extraction Failed. Stopping loop (Pause on Error is enabled).");
+                                        }
                                     }
                                 }
                             }
@@ -1554,11 +1586,16 @@ if (window.GrokLoopInjected) {
 
                             await new Promise(r => setTimeout(r, 5000));
 
-                            // Try to find and click Redo/Regenerate button
-                            const redoBtn = Array.from(document.querySelectorAll('button')).find(b =>
-                                (b.innerText.includes('Redo') || b.innerText.includes('Regenerate') || b.getAttribute('aria-label')?.includes('Regenerate'))
-                                && !b.disabled
-                            );
+                            // Try to find and click Redo/Regenerate button (Multi-Language)
+                            const redoBtn = Array.from(document.querySelectorAll('button')).find(b => {
+                                const text = (b.innerText || '').toLowerCase();
+                                const aria = (b.getAttribute('aria-label') || '').toLowerCase();
+                                const title = (b.title || '').toLowerCase();
+
+                                return TRANSLATIONS.regenerate.some(k =>
+                                    text.includes(k) || aria.includes(k) || title.includes(k)
+                                ) && !b.disabled;
+                            });
 
                             if (redoBtn) {
                                 console.log('Clicking Redo/Regenerate button...');

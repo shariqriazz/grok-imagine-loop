@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         if (versionNumber) { // Check existence (new ID)
-            versionNumber.textContent = "v1.6 Beta 10"; // Manual Override for Beta
+            versionNumber.textContent = "v1.6 Beta 12"; // Manual Override for Beta
         }
 
         let displayVer = `v${manifestVersion}`;
@@ -855,14 +855,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Logic ---
     async function findGrokTab() {
-        const strictPattern = "*://grok.com/imagine/*";
-        // Also allow x.com/imagine? Not sure if that exists, but let's stick to user request for grok.com/imagine
-
-        console.log('Finding Grok Tab (Strict Mode)...');
+        console.log('Finding Grok Tab (Robust Mode)...');
 
         try {
-            // 1. Check for Strict Matches (grok.com/imagine)
-            const strictTabs = await chrome.tabs.query({ url: strictPattern });
+            // 1. Query ALL tabs and filter manually for maximum reliability
+            // This avoids issues with strict pattern matching differences between browsers
+            // Requires "tabs" permission in manifest
+            const allTabs = await chrome.tabs.query({});
+
+            // Robust Filter: Includes www, no-www, http, https, trailing slashes, etc.
+            const strictTabs = allTabs.filter(t => t.url && (
+                t.url.includes('grok.com/imagine')
+            ));
 
             if (strictTabs.length > 1) {
                 console.warn('Multiple Imagine tabs found:', strictTabs.length);
@@ -880,8 +884,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 2. If NO strict match, check for generic Grok/X tabs to give a better error
-            const genericPatterns = ["*://grok.com/*", "*://x.com/*", "*://twitter.com/*"];
-            const genericTabs = await chrome.tabs.query({ url: genericPatterns });
+            const genericTabs = allTabs.filter(t => t.url && (
+                t.url.includes('grok.com') ||
+                t.url.includes('x.com') ||
+                t.url.includes('twitter.com')
+            ));
 
             if (genericTabs.length > 0) {
                 // User has Grok open but not on /imagine
@@ -901,7 +908,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 null,
                 { title: "Tab Not Found", showCancel: false, confirmText: "Open" }
             );
-            // Optional: We could offer to open it, but sticking to alert for now logic
             return null;
 
         } catch (e) {

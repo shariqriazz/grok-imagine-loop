@@ -1,5 +1,12 @@
 # Release Notes - Grok Imagine Loop
 
+## v1.6.0.12 (Beta 12)
+- **Fix:** "Pause on Error" now correctly pauses the loop if "Proactive Frame Extraction" fails after all retries. Previously, it would log the error but continue to the next segment without an image.
+
+## v1.6.0.11 (Beta 11)
+- **Feature:** Added Multi-Language Support! The extension now supports Grok in English, Spanish, French, German, Chinese (Simplified/Traditional), Japanese, Russian, and Portuguese.
+- **Refactor:** Updated all button selectors to use a robust dictionary of localized terms.
+
 ## v1.6.0.10 (Beta 10)
 - **Fix:** Added automatic retries (3 attempts) for "Proactive Frame Extraction" failures. This prevents the "extraction failed" error from stopping your workflow or causing missing frames in the next segment.
 - **Fix:** Improved error logging to catch and display detailed error messages.

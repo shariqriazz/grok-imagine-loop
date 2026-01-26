@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Grok Imagine Loop",
-  "version": "1.6.0.10",
+  "version": "1.6.0.12",
   "description": "Automates Grok Imagine to create looped video sequences.",
   "permissions": [
     "activeTab",
@@ -9,7 +9,8 @@
     "unlimitedStorage",
     "downloads",
     "sidePanel",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
     "https://x.com/*",
