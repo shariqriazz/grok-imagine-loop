@@ -2,19 +2,31 @@
 
 ## 🐛 Known Issues
 
-- **Selector Brittleness**: The extension relies on DOM selectors (aria-labels, specific button classes) which may break if Grok updates their UI.
-- **Legacy Code Caching**: If the extension behaves unexpectedly (e.g., old delays), a full reload from `chrome://extensions` is required.
+- **X Button Misclick**: Occasionally clicks on X, opening a new tab to x.com
+- **Multi-Language Incomplete**: Some keyword translations are missing, causing extension to timeout in non-English interfaces
+- **Background Tab Throttling**: Performance slows significantly when user navigates away from grok.com/imagine tab (Chrome browser limitation)
+- **Selector Brittleness**: The extension relies on DOM selectors which may break if Grok updates their UI
 
-## 💡 Feature Requests / Todo
+## 💡 Feature Requests / TODO
 
-- [ ] **Cloud Sync**: Sync settings across devices (currently local only).
-- [ ] **Custom CSS Selectors**: Allow advanced users to override selectors in settings if Grok UI changes.
-- [ ] **Auto-Switch Video Mode**: Automatically select "Video" tab and desired Aspect Ratio on start.
+- [ ] **Export/Import Config**: Allow users to backup and restore their settings and presets
+- [ ] **Safari Port**: Adapt extension for Safari Web Extensions
+- [ ] **Popup Z-Index**: Ensure all popups/modals always appear on top
+- [ ] **Fix Persistence Issues**: Add debounce for `saveScenes` and `saveConfigs` to prevent storage flooding
+- [ ] **Complete Multi-Language**: Add missing keyword translations for all supported languages
+- [ ] **Cloud Sync**: Sync settings across devices (currently local only)
+- [ ] **Custom CSS Selectors**: Allow advanced users to override selectors in settings if Grok UI changes
 
-## ✅ Resolved
+## ✅ Resolved (v1.6.1)
 
-- **Auto-Resume**: Extension now detects page reloads and resumes the queue automatically.
-- **Debug Logs**: Fixed issue where enabling logs mid-run didn't take effect.
-- **More Button**: Fixed logic that accidentally clicked the "Search" button instead of "More" for upscaling.
-- **Tooltip Cropping**: Fixed tooltips going off-screen on the left side.
-- **Global Prompt Support**: Implemented "Global Suffix" field to append text to all scenes.
+- **Multi-Language Support**: Extension now supports 8 languages (EN, ES, FR, DE, ZH, JA, RU, PT)
+- **A/B Test Handling**: Automatically skips "Which video do you prefer?" survey
+- **Resume Button State**: No longer gets stuck in "Resuming..." after crashes
+- **Upscale Detection**: Fixed for German, Chinese, Spanish, French interfaces
+- **Clear/Delete Misclick**: Resume no longer accidentally clicks the X button
+- **Scene 1 Regeneration**: No longer re-uploads stale images from previous runs
+- **Regenerate with Edits**: Now uses the edited prompt text
+- **Frame Extraction Retries**: Auto-retries 3x on failures
+- **Real-Time Config**: Settings update instantly, no restart needed
+- **Global Prompt Support**: Implemented "Global Suffix" field
+- **More Button**: Fixed logic that accidentally clicked "Search" instead of "More"
